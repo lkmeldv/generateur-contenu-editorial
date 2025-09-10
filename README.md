@@ -65,7 +65,14 @@ custom = mot-interdit, expression-interdite
 
 ## 🚀 Utilisation
 
-### Génération simple
+### Génération simple (5 articles par défaut)
+```bash
+python content_generator_generic.py \
+  --config config_jardinage.ini \
+  --theme "Jardinage en hiver"
+```
+
+### Génération avec nombre spécifique
 ```bash
 python content_generator_generic.py \
   --config config_jardinage.ini \
@@ -91,22 +98,41 @@ python content_generator_generic.py \
   --domain "monjardin.fr" \
   --exclude-brands "Monsanto,Roundup" \
   --exclude-cities "Paris,Lyon" \
-  --exclude-custom "pesticide,chimique" \
-  --output-html
+  --exclude-custom "pesticide,chimique"
+```
+
+### Mode verbeux avec mesure de temps
+```bash
+python content_generator_generic.py \
+  --config config_cuisine.ini \
+  --theme "Cuisine d'hiver" \
+  --count 3 \
+  --verbose \
+  --time
 ```
 
 ### Options disponibles
-- `--config` : Fichier de configuration thématique
-- `--theme` : Sujet principal de génération
-- `--count` : Nombre d'articles à générer
-- `--output-html` : Génère les pages HTML avec maillage interne
+
+#### Options principales
+- `--config` : Fichier de configuration thématique (défaut: config_theme.ini)
+- `--theme` : Thème principal de génération (ex: "Jardinage en hiver")
+- `--count` : Nombre d'articles à générer (défaut: 5)
+- `--topics` : Liste de sujets spécifiques (sinon utilise topics.txt)
+- `--level` : Niveau de difficulté (débutant/intermédiaire/avancé)
+- `--out` : Répertoire de sortie (défaut: out)
+
+#### Personnalisation
 - `--domain` : Nom de domaine du site (ex: monsite.fr)
 - `--exclude-brands` : Marques à exclure (ex: "Nike,Adidas,Puma")
 - `--exclude-cities` : Villes à exclure (ex: "Paris,Lyon,Marseille")
 - `--exclude-competitors` : Concurrents à exclure
 - `--exclude-custom` : Mots/expressions personnalisés à exclure
-- `--verbose` : Mode détaillé
-- `--time` : Affiche le temps d'exécution
+
+#### Utilitaires
+- `--output-html` : Prépare pour génération HTML (en développement)
+- `--verbose` : Mode verbeux avec détails
+- `--time` : Mesure et affiche le temps d'exécution
+- `--init-config` : Crée un fichier de configuration par défaut
 
 ## 📁 Structure générée
 
@@ -133,12 +159,13 @@ python content_generator_generic.py \
 ```
 
 ### Résultat
-- **9 articles** thématiques cohérents
-- **Page d'index** avec navigation et fil d'ariane
+- **Articles générés** selon le nombre spécifié (défaut: 5)
+- **Domaine personnalisé** intégré automatiquement
+- **Exclusions appliquées** aux contenus générés
 - **Maillage interne** : 5-8 liens contextuels par article
-- **Design responsive** avec CSS moderne
 - **SEO optimisé** avec métadonnées complètes
-- **Temps d'exécution** : ~4-5 minutes
+- **Mesure de temps** optionnelle pour performance
+- **Mode verbeux** pour debug et validation
 
 ### Articles générés
 1. Préparation du jardin pour l'hiver

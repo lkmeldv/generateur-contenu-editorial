@@ -338,6 +338,31 @@ def main():
         help='Mots/expressions personnalisés à exclure, séparés par des virgules'
     )
     parser.add_argument(
+        '--theme',
+        help='Thème principal pour la génération (ex: "Jardinage en hiver")'
+    )
+    parser.add_argument(
+        '--count',
+        type=int,
+        default=5,
+        help='Nombre d\'articles à générer (défaut: 5)'
+    )
+    parser.add_argument(
+        '--output-html',
+        action='store_true',
+        help='Générer les pages HTML avec maillage interne'
+    )
+    parser.add_argument(
+        '--verbose',
+        action='store_true',
+        help='Mode verbeux pour afficher plus de détails'
+    )
+    parser.add_argument(
+        '--time',
+        action='store_true',
+        help='Mesurer et afficher le temps d\'exécution'
+    )
+    parser.add_argument(
         '--init-config',
         action='store_true',
         help='Créer un fichier de configuration par défaut'
@@ -385,6 +410,10 @@ def main():
         if generator.config['site_name'] == 'MonSite.fr':
             generator.config['site_name'] = args.domain
     
+    # Appliquer le thème si fourni
+    if args.theme:
+        generator.config['theme'] = args.theme
+    
     # Appliquer les exclusions depuis la ligne de commande
     if args.exclude_brands:
         generator.config['exclusions']['brands'] = [item.strip() for item in args.exclude_brands.split(',') if item.strip()]
@@ -400,27 +429,67 @@ def main():
     
     output_dir = Path(args.out)
     
+    # Limiter le nombre d'articles si spécifié
+    if args.count and args.count < len(topics):
+        topics = topics[:args.count]
+        if args.verbose:
+            print(f"📊 Limitation à {args.count} articles")
+    
     print(f"🎯 Thématique: {generator.config['theme']}")
     print(f"👥 Public: {generator.config['target_audience']}")
     print(f"📝 Ton: {generator.config['tone']}")
+    if args.domain:
+        print(f"🌐 Domaine: {generator.config['domain']}")
+    if any(generator.config['exclusions'].values()):
+        print(f"🚫 Exclusions activées")
+    print(f"📄 Articles à générer: {len(topics)}")
     print()
+    
+    # Mesurer le temps si demandé
+    import time
+    start_time = time.time() if args.time else None
     
     # Traiter chaque sujet
     success_count = 0
-    for topic in topics:
+    for i, topic in enumerate(topics, 1):
         try:
-            print(f"🔄 Génération: {topic}")
+            if args.verbose:
+                print(f"🔄 Génération {i}/{len(topics)}: {topic}")
+            else:
+                print(f"🔄 Génération: {topic}")
+            
             data = generator.generate_content(topic, args.level)
             
             if data:
                 filename = generator.save_content(data, output_dir)
-                print(f"✓ Généré: {args.out}/{filename}")
+                if args.verbose:
+                    print(f"✓ Fichier créé: {args.out}/{filename}")
+                    if 'exclusions' in str(generator._build_exclusions_text()).lower():
+                        print(f"  🚫 Exclusions appliquées")
+                else:
+                    print(f"✓ Généré: {args.out}/{filename}")
                 success_count += 1
                 
         except Exception as e:
             print(f"✗ Échec sur \"{topic}\": {e}")
+            if args.verbose:
+                import traceback
+                print(f"  📋 Détails: {traceback.format_exc()}")
+    
+    # Afficher le résumé avec temps si demandé
+    elapsed_time = time.time() - start_time if start_time else None
     
     print(f"\n📊 Résumé: {success_count}/{len(topics)} articles générés")
+    if elapsed_time:
+        minutes = int(elapsed_time // 60)
+        seconds = int(elapsed_time % 60)
+        print(f"⏱️  Temps d'exécution: {minutes}m {seconds}s")
+    
+    # Génération HTML si demandée
+    if args.output_html and success_count > 0:
+        print(f"\n🎨 Génération HTML non implémentée dans cette version")
+        print(f"💡 Les articles JSON sont prêts dans {args.out}/")
+        print(f"   Utilisez un script séparé pour convertir en HTML")
 
 if __name__ == "__main__":
     main()

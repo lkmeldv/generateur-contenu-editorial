@@ -6,19 +6,27 @@
 ```bash
 python content_generator_generic.py \
   --config config_jardinage.ini \
+  --theme "Jardinage en hiver" \
   --topics "Taille des rosiers en hiver" \
-  --domain "monjardin-passion.fr"
+  --count 1 \
+  --domain "monjardin-passion.fr" \
+  --verbose \
+  --time
 ```
 
 ### Test 2 : Cuisine avec exclusions multiples
 ```bash
 python content_generator_generic.py \
   --config config_cuisine.ini \
+  --theme "Cuisine d'hiver" \
   --topics "Recettes d'hiver réconfortantes" \
+  --count 1 \
   --domain "cuisine-maison.fr" \
   --exclude-brands "McDo,KFC,Burger King" \
   --exclude-competitors "Marmiton,750g" \
-  --exclude-custom "malbouffe,industriel"
+  --exclude-custom "malbouffe,industriel" \
+  --verbose \
+  --time
 ```
 
 ### Test 3 : Vérification des exclusions dans le prompt
@@ -37,30 +45,37 @@ RESTRICTIONS ÉDITORIALES :
 ```bash
 python content_generator_generic.py \
   --config config_jardinage.ini \
-  --topics "Jardinage bio sans produits chimiques" \
+  --theme "Jardinage écologique" \
+  --count 5 \
   --domain "jardin-ecologique.fr" \
   --exclude-brands "Monsanto,Bayer,Roundup" \
-  --exclude-custom "pesticide chimique,engrais synthétique"
+  --exclude-custom "pesticide chimique,engrais synthétique" \
+  --time
 ```
 
 ### Sport sans marques concurrentes
 ```bash
 python content_generator_generic.py \
   --config config_sport.ini \
-  --topics "Équipement running débutant" \
+  --theme "Sport et bien-être" \
+  --count 8 \
   --domain "sport-nature.fr" \
   --exclude-brands "Nike,Adidas,Puma" \
-  --exclude-cities "Paris,Lyon,Marseille"
+  --exclude-cities "Paris,Lyon,Marseille" \
+  --verbose
 ```
 
-### Bricolage professionnel
+### Bricolage professionnel (génération rapide)
 ```bash
 python content_generator_generic.py \
   --config config_bricolage.ini \
-  --topics "Rénovation salle de bain" \
+  --theme "Bricolage maison" \
+  --count 3 \
   --domain "bricolage-expert.fr" \
   --exclude-competitors "Leroy Merlin,Castorama" \
-  --exclude-brands "Bosch,Makita"
+  --exclude-brands "Bosch,Makita" \
+  --time \
+  --verbose
 ```
 
 ## 📋 Configuration avancée
